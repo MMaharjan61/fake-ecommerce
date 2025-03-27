@@ -1,5 +1,18 @@
+import { Route, Routes } from "react-router";
+import Navbar from "./components/Navbar";
+import HomePage from "./pages/HomePage";
+
 const App = () => {
-  return <h1 className="text-3xl font-bold underline">React + TailwindCSS</h1>;
+  return (
+    <div className="app">
+      <Navbar />
+      <div className="routes">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+        </Routes>
+      </div>
+    </div>
+  );
 };
 
 export default App;
