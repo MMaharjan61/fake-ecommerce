@@ -1,29 +1,42 @@
 export const getCartFromLocalStorage = () => {
-  const cart = localStorage.getItem("cart");
-  return cart ? JSON.parse(cart) : [];
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  return cart;
 };
 
-export const saveCartToLocalStorage = (cart) => {
-  localStorage.setItem("cart", JSON.stringify(cart));
-};
+export const addToCart = (product, cart, setCart) => {
+  const updatedCart = [...cart];
+  const index = updatedCart.findIndex((item) => item.id === product.id);
 
-export const addToCart = (product) => {
-  const cart = getCartFromLocalStorage();
-  cart.push({ product, quantity: 1 });
-  saveCartToLocalStorage(cart);
-};
-
-export const updateCart = (product, quantity) => {
-  const cart = getCartFromLocalStorage();
-  const itemIndex = cart.findIndex((item) => item.product.id === product.id);
-  if (itemIndex !== -1) {
-    cart[itemIndex].quantity = quantity;
-    saveCartToLocalStorage(cart);
+  if (index !== -1) {
+    updatedCart[index].quantity += 1;
+  } else {
+    updatedCart.push({ ...product, quantity: 1 });
   }
+
+  localStorage.setItem("cart", JSON.stringify(updatedCart));
+  setCart(updatedCart);
 };
 
-export const removeFromCart = (product) => {
-  let cart = getCartFromLocalStorage();
-  cart = cart.filter((item) => item.product.id !== product.id);
-  saveCartToLocalStorage(cart);
+export const removeFromCart = (productId, cart, setCart) => {
+  const updatedCart = cart.filter((item) => item.id !== productId);
+  localStorage.setItem("cart", JSON.stringify(updatedCart));
+  setCart(updatedCart);
+};
+
+export const increaseQuantity = (productId, cart, setCart) => {
+  const updatedCart = cart.map((item) =>
+    item.id === productId ? { ...item, quantity: item.quantity + 1 } : item
+  );
+  localStorage.setItem("cart", JSON.stringify(updatedCart));
+  setCart(updatedCart);
+};
+
+export const decreaseQuantity = (productId, cart, setCart) => {
+  const updatedCart = cart.map((item) =>
+    item.id === productId && item.quantity > 1
+      ? { ...item, quantity: item.quantity - 1 }
+      : item
+  );
+  localStorage.setItem("cart", JSON.stringify(updatedCart));
+  setCart(updatedCart);
 };
