@@ -5,7 +5,7 @@ import CartPage from "./pages/CartPage";
 
 const App = () => {
   return (
-    <div className="app">
+    <div className="app bg-blue-50">
       <Navbar />
       <div className="routes">
         <Routes>

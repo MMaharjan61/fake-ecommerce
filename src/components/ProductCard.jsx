@@ -1,51 +1,42 @@
-import { useState } from "react";
-import { addToCart, updateCart, removeFromCart } from "../utils/storage";
+import { addToCart, removeFromCart } from "../utils/storage";
 
-const ProductCard = ({ product }) => {
-  const [quantity, setQuantity] = useState(0);
-
-  const handleAddToCart = () => {
-    if (quantity === 0) {
-      addToCart(product);
-    } else {
-      updateCart(product, quantity);
-    }
-    setQuantity(quantity + 1);
-  };
-
-  const handleRemoveFromCart = () => {
-    if (quantity > 0) {
-      setQuantity(quantity - 1);
-      if (quantity === 1) {
-        removeFromCart(product);
-      } else {
-        updateCart(product, quantity - 1);
-      }
-    }
-  };
+const ProductCard = ({ product, cart, setCart }) => {
+  const productInCart = cart.find((item) => item.id === product.id);
 
   return (
-    <div className="card shadow-md p-4">
+    <div className="card shadow-md p-4 w-full h-80 bg-white">
+      <figure className="w-full h-64 flex items-center justify-center">
+        <img
+          className="object-contain w-full h-full"
+          src={product.image}
+          alt={product.title}
+        />
+      </figure>
       <div className="title mt-2">
         <h3 className="font-bold">{product.title}</h3>
       </div>
       <div className="price mt-2">
         <p className="text-gray-700">{`${product.price} €`}</p>
       </div>
-
-      {quantity === 0 ? (
-        <div className="mt-2">
-          <button onClick={handleAddToCart} className="btn btn-primary">
+      <div className="card-actions justify-end">
+        {productInCart ? (
+          <div>
+            <button
+              className="btn btn-soft"
+              onClick={() => removeFromCart(product.id, cart, setCart)}
+            >
+              Remove
+            </button>
+          </div>
+        ) : (
+          <button
+            className="btn btn-soft"
+            onClick={() => addToCart(product, cart, setCart)}
+          >
             Add to Cart
           </button>
-        </div>
-      ) : (
-        <div className="mt-2">
-          <button onClick={handleRemoveFromCart} className="btn btn-secondary">
-            Remove from Cart
-          </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
